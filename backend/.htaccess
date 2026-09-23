@@ -1,0 +1,77 @@
+# =============================================================================
+# VenueVue 2.3 - backend hardening (Apache / XAMPP)
+# =============================================================================
+# These directives only apply when `backend/` is served by Apache. The
+# RUN-VENUEVUE.bat launcher serves the API with PHP's built-in server
+# (php -S), which ignores .htaccess entirely - this file is what keeps the
+# same code correct once you switch to Apache for the LAN deployment.
+#
+# Rev 2.3 requires that bearer tokens are never cached, that auth is fully
+# self-hosted, and that only the endpoint is reachable over HTTP.
+
+# -----------------------------------------------------------------------------
+# 1. Forward the Authorization header to PHP
+# -----------------------------------------------------------------------------
+# When PHP runs as CGI/FastCGI (php-cgi, mod_fcgid, mod_proxy_fcgi) Apache
+# consumes the `Authorization` request header and never exposes it to the
+# script. Without this, every authenticated call looks like "no token" and
+# auth_middleware.php answers 401 even though the client sent a valid one.
+#
+# auth_middleware.php also falls back to REDIRECT_HTTP_AUTHORIZATION and
+# getallheaders(); this publishes the header into the environment, which is
+# the portable fix.
+<IfModule mod_setenvif.c>
+    SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+</IfModule>
+
+# Apache >= 2.4.13 can pass it through natively; prefer this when available.
+<IfModule mod_proxy_fcgi.c>
+    CGIPassAuth On
+</IfModule>
+
+# -----------------------------------------------------------------------------
+# 2. Never let a token-bearing response be cached
+# -----------------------------------------------------------------------------
+# auth.php responds with a raw bearer token and authenticated endpoints echo
+# per-user data. An intermediate cache replaying those bodies would hand one
+# tablet another user's session, so forbid storage outright.
+<IfModule mod_headers.c>
+    Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header always set Pragma "no-cache"
+    Header always unset X-Powered-By
+</IfModule>
+
+# -----------------------------------------------------------------------------
+# 3. Deny HTTP access to internals
+# -----------------------------------------------------------------------------
+# config.php holds the database credentials and auth_middleware.php defines the
+# guards; both are meant to be require()d, never requested. (Requesting
+# auth_middleware.php directly executes nothing and returns an empty 200, but
+# there is no reason to advertise it.) Answering 403 rather than 200 keeps the
+# intent explicit. Endpoints that require these files are unaffected - this
+# matches the requested URI, not includes.
+<FilesMatch "^(config|db|helpers|auth_middleware)\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# tools/create_user.php already refuses to run unless PHP_SAPI === 'cli', so
+# this is defence in depth: the credential writer should not be reachable at
+# all over HTTP.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^tools/ - [F,L]
+</IfModule>
+
+# -----------------------------------------------------------------------------
+# 4. Do not advertise the directory contents
+# -----------------------------------------------------------------------------
+# Without this, GET /backend/ lists config.php, auth.php and tools/ to anyone
+# on the LAN. auth.php and auth_middleware.php answer their own CORS
+# pre-flight, so they stay reachable - no rewrite rules needed for them.
+Options -Indexes

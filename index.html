@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#4A3325" />
+    <title>VenueVue POS</title>
+    <script>
+      // Runs before the first paint so a dark-mode tablet never flashes cream.
+      // Kept inline and dependency-free; ThemeProvider takes over from here.
+      (function () {
+        try {
+          var stored = localStorage.getItem('VENUEVUE_THEME');
+          var dark =
+            stored === 'dark' ||
+            (stored !== 'light' &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.toggle('dark', dark);
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+          document
+            .querySelector('meta[name="theme-color"]')
+            .setAttribute('content', dark ? '#2B1F14' : '#4A3325');
+          // Pin the resolved choice immediately, so ThemeProvider can never
+          // re-resolve it differently from the theme painted here.
+          localStorage.setItem('VENUEVUE_THEME', dark ? 'dark' : 'light');
+        } catch (error) {
+          /* Private mode with storage disabled - the light default is fine. */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

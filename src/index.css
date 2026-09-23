@@ -1,0 +1,187 @@
+/**
+ * VenueVue 2.3 - design tokens (Tailwind CSS 4).
+ *
+ * There is no tailwind.config.js and no PostCSS setup: @tailwindcss/vite pulls
+ * the framework in through the single @import below, scans ./src for utility
+ * classes, and turns every `--color-*` token in @theme into `bg-*` / `text-*` /
+ * `border-*` utilities that compile down to `var(--color-*)`.
+ *
+ * That indirection is what makes the two palettes work with no duplication:
+ *
+ *   1. @theme declares each token with its LIGHT value.
+ *   2. The unlayered `:root.dark` block re-declares the same custom properties
+ *      with their DARK values. Unlayered rules always outrank the `@layer theme`
+ *      block Tailwind writes its defaults into, so this wins without !important.
+ *   3. ThemeProvider adds or removes `.dark` on <html>.
+ *
+ * Every component is therefore written once against a semantic token and needs
+ * no `dark:` variant at all.
+ */
+
+@import "tailwindcss";
+
+/* Tailwind's built-in `dark:` variant follows the operating system. VenueVue
+ * pins the mode with a class instead, so a counter tablet can stay light while
+ * the back-office machine stays dark. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* -------------------------------------------------------------------------- */
+/* Palette - the exact Rev 2.3 hex values, light column                        */
+/* -------------------------------------------------------------------------- */
+@theme {
+  /* Primary: navbar + buttons                                             */
+  --color-brand: #4A3325;
+  /* Secondary: cards + highlights                                         */
+  --color-latte: #D8C5AC;
+  /* Text + icons                                                          */
+  --color-ink: #242424;
+  /* Page background                                                       */
+  --color-surface: #FAF7F2;
+  /* Cards + panels                                                        */
+  --color-panel: #FFFFFF;
+  /* Borders + dividers                                                    */
+  --color-line: #E8E6E1;
+  /* Disabled text                                                         */
+  --color-disabled: #A7A7A7;
+  /* Secondary text                                                        */
+  --color-muted: #4B4B4B;
+
+  /* Inventory status                                                      */
+  --color-stock-in: #6B8F71;
+  --color-stock-low: #E9A23B;
+  --color-stock-out: #D96868;
+
+  /* Accents                                                               */
+  --color-accent: #8E7CC3; /* selected / highlight - violet */
+  --color-info: #6FA8DC; /* links / info - sky blue       */
+
+  /* --- Code + query blocks ----------------------------------------------
+   * Pinned by the spec in both themes: charcoal #1F1F1F behind crisp cream
+   * #FAF7F2, with distinct syntax hues. A code block is a dark island whichever
+   * theme is active, so none of these tokens has a dark override - they pair
+   * with a surface that does not move.
+   *
+   * The syntax hues are the palette accents lifted until they clear 4.5:1 on
+   * #1F1F1F (each lands between 6:1 and 10:1): violet from --color-accent, sky
+   * from --color-info, sage from --color-stock-in, amber from --color-stock-low. */
+  --color-code: #1F1F1F;
+  --color-on-code: #FAF7F2;
+  --color-code-keyword: #C9B6F2;
+  --color-code-fn: #A9CDF0;
+  --color-code-string: #A9C9AE;
+  --color-code-number: #F0C58A;
+  --color-code-comment: #9E9E9E;
+
+  /* --- Accent text partners ---------------------------------------------
+   * #8E7CC3 and #6FA8DC are fills, not text colours: as text they are 3.6:1 and
+   * 2.8:1 on a white panel, which the "nothing may go unreadable on hover" rule
+   * forbids. Each accent therefore gets two legible partners in the same hue
+   * family - 'strong' for the light panels the accents sit on, 'soft' for the
+   * dark ones - while the accent hex itself still paints the wash, the border and
+   * the underline, so the hover still reads as violet or sky blue.
+   *
+   * Both pairs are theme-independent for the same reason as the code tokens: the
+   * surfaces they pair with (panel, code, brand bar) keep their luminance across
+   * the two themes. */
+  --color-accent-strong: #5B47A0; /* 7.3:1 on white, 5.9:1 on #E8E8E8 */
+  --color-info-strong: #1A6096; /* 6.7:1 on white, 5.4:1 on #E8E8E8 */
+  --color-accent-soft: #C3B4E6; /* 9.3:1 on #1F1F1F                 */
+  --color-info-soft: #A9CDF0; /* 9.8:1 on #1F1F1F                 */
+
+  /* --- Links on the page background -------------------------------------
+   * A link that lives directly on the page needs the opposite treatment to one
+   * on a panel: the page flips from cream to dark brown, so the hover colour has
+   * to flip with it. This is the one text token that does declare a dark
+   * override below - deep sky on cream (6.2:1), pale sky on dark brown (8.6:1).
+   * --color-info-strong is not used here: on the dark page it is 2.1:1. */
+  --color-link: #1A6096; /* hover / active link on the page */
+
+  /* --- Text-on-a-fill partners ------------------------------------------
+   * --color-ink is only legible against a light fill, so every fill gets an
+   * explicit foreground partner. The light values below are just the spec's
+   * charcoal and dark gray doing their normal job; the dark overrides are where
+   * the specification needed correcting (see the note above :root.dark). */
+  --color-on-surface: #242424; /* text on the page background      */
+  --color-on-surface-muted: #4B4B4B; /* secondary text on the background */
+  --color-on-panel: #242424; /* text on cards + panels           */
+  --color-on-panel-muted: #4B4B4B; /* secondary text on cards          */
+  --color-on-brand: #FAF7F2; /* text on coffee brown             */
+  --color-on-latte: #242424; /* text on latte beige              */
+}
+
+/* -------------------------------------------------------------------------- */
+/* Palette - dark column                                                       */
+/* -------------------------------------------------------------------------- */
+/* DEVIATION, deliberate and documented:
+ *
+ * The spec's dark "Text / Icons" token is #121212 and its dark "Secondary Text"
+ * is #1F1F1F. Neither is readable on the dark background #2E2A24 - roughly
+ * 1.2:1 and 1.1:1. Both are kept verbatim and are used exactly where they do
+ * work: on the light #E8E8E8 panels the spec asks for, where they hit 15.4:1
+ * and 13.4:1.
+ *
+ * Text that sits directly on the dark page background therefore uses #E8E8E8
+ * and #A0A0A0 (11.6:1 and 5.5:1). #E8E8E8 is the spec's own dark "Cards /
+ * Panels" white, so the fix stays inside the palette.
+ *
+ * Same problem, same fix, on the dark latte fill: #121212 on #7A5E45 is only
+ * 3.2:1, so --color-on-latte becomes #E8E8E8 (4.9:1).
+ *
+ * One consequence worth stating: because the dark panel stays light, the light
+ * panels and the code surface both keep their luminance in either theme. That is
+ * why the code tokens and the accent text partners above declare no dark
+ * override - they are paired with a surface that never changes colour.
+ *
+ * Inline badges and code chips follow the same rule as the rest of the app: the
+ * specimen hexes carry the fill, the border and the dot, and the label always
+ * sits in an on-* partner token, so nothing is ever dark text on a dark chip.
+ */
+:root.dark {
+  --color-brand: #2B1F14;
+  --color-latte: #7A5E45;
+  --color-ink: #121212;
+  --color-surface: #2E2A24;
+  --color-panel: #E8E8E8;
+  --color-line: #A0A0A0;
+  --color-disabled: #4B4B4B;
+  --color-muted: #1F1F1F;
+
+  --color-stock-in: #3F6B56;
+  --color-stock-low: #C27A24;
+  --color-stock-out: #B55252;
+
+  --color-accent: #6B52B8;
+  --color-info: #4A8FD6;
+
+  --color-on-surface: #E8E8E8;
+  --color-on-surface-muted: #A0A0A0;
+  --color-on-panel: #121212;
+  --color-on-panel-muted: #1F1F1F;
+  --color-on-brand: #E8E8E8;
+  --color-on-latte: #E8E8E8;
+
+  /* The page background flips, so the page-level link colour flips with it. */
+  --color-link: #A9CDF0;
+}
+
+/* Let the browser theme native chrome - scrollbars, caret, date pickers and the
+ * default form-control surfaces - to match the active palette. */
+:root {
+  color-scheme: light;
+}
+
+:root.dark {
+  color-scheme: dark;
+}
+
+@layer base {
+  /* POS hardware sits in bright rooms at odd angles: keep the page chrome calm
+   * and let the components own the colour. */
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface text-on-surface antialiased;
+  }
+}
