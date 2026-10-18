@@ -1,3 +1,5 @@
+> Current implementation: [PHASE3.md](PHASE3.md) documents TravelBean MNL branding and role navigation polish. Start with [PHASE2.md](PHASE2.md) for management, reports, backup/restore and the required migration. [PHASE1.md](PHASE1.md) covers the underlying checkout, variant/batch schema, installation and recovery. The older setup below describes the original checkpoint; its demo credentials are not production setup instructions.
+
 Hello
 The latest codebase for VenueVue is now live on our GitHub repository. This release includes our completed Sprint 4 self-hosted authentication engine, database schema migrations, auto-injected device tracking, and the modernized Coffee & Latte UI layout.
 

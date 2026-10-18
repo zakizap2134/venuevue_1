@@ -77,11 +77,11 @@ function CupMark({ className }) {
 
 export default function LogoPlaceholder({
   src,
-  alt = 'VenueVue',
+  alt = 'TravelBean MNL',
   tone = 'brand',
   size = 'md',
-  brand = 'VenueVue',
-  subtitle,
+  brand = 'TravelBean MNL',
+  subtitle = 'Powered by VenueVue',
   showWordmark = true,
   className = '',
 }) {
@@ -109,7 +109,7 @@ export default function LogoPlaceholder({
             onError={() => setImageFailed(true)}
           />
         ) : (
-          <CupMark className={scale.icon} />
+          <CupMark className={`${scale.icon} ${palette.icon}`} />
         )}
       </span>
 

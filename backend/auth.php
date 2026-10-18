@@ -168,6 +168,16 @@ if (!in_array($role, VENUEVUE_ALLOWED_ROLES, true)) {
     fail(403, 'This account\'s role is not recognised by the POS. Contact the owner.');
 }
 
+// Serialize account verification and rehash with resets and restore.
+$pdo->beginTransaction();
+$pdo->query('SELECT id FROM workflow_lock WHERE id=1 FOR UPDATE')->fetch();
+$check=$pdo->prepare('SELECT password_hash,role,is_active,username FROM users WHERE user_id=? FOR UPDATE');
+$check->execute([$userId]);$current=$check->fetch();
+if (!$current || !(int)$current['is_active'] || $current['username']!==$user['username'] || $current['role']!==$role || !password_verify($password,$current['password_hash'])) {
+    $pdo->rollBack();fail(401,'Account changed. Sign in again.');
+}
+$storedHash=$current['password_hash'];
+
 /**
  * Opportunistically upgrade the stored digest when PHP's default cost changes.
  * This is the only moment the plaintext password is available, so it is the
@@ -221,6 +231,7 @@ try {
     // The unique index on token_hash makes a collision a hard error rather than
     // a silently shared session; surface it as a retryable server fault.
     error_log('[venuevue] session insert failed: ' . $exception->getMessage());
+    $pdo->rollBack();
     fail(500, 'Could not start a session. Please try again.');
 }
 
@@ -236,6 +247,7 @@ audit_log($pdo, $userId, 'LOGIN_OK', 'api_sessions', null, [
  * Response - the raw token is returned here and nowhere else
  * ========================================================================== */
 
+$pdo->commit();
 json_response(200, [
     'success' => true,
     'token' => $token,

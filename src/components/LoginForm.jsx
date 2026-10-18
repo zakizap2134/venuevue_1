@@ -111,11 +111,11 @@ export default function LoginForm() {
 
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-on-brand xl:text-5xl">
-            VenueVue
+            TravelBean MNL
           </h1>
           <p className="mt-3 text-lg text-on-brand/80 xl:text-xl">
-            Offline point of sale for the venue floor. Everything runs on the shop LAN -
-            no internet connection required.
+            Coffee on the move. Your local-network register and recipe inventory,
+            powered by VenueVue. Works without internet while the host and shop Wi-Fi are running.
           </p>
         </div>
 
@@ -136,7 +136,7 @@ export default function LoginForm() {
             className="mb-4 justify-center"
           />
 
-          <h1 className="text-3xl font-bold tracking-tight text-on-surface">VenueVue</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-on-surface">TravelBean MNL</h1>
           <p className="mt-2 text-lg text-on-surface-muted">Sign in to your workstation</p>
         </div>
 
@@ -154,7 +154,7 @@ export default function LoginForm() {
               <div>
                 <h2 className="text-2xl font-bold tracking-tight text-on-panel">Sign in</h2>
                 <p className="mt-1 text-base text-on-panel-muted">
-                  Use your VenueVue staff account.
+                  Use your TravelBean MNL owner or barista account.
                 </p>
               </div>
 
@@ -346,7 +346,7 @@ export default function LoginForm() {
         </div>
 
         <p className="mt-6 w-full max-w-md text-center text-sm text-on-surface-muted">
-          VenueVue POS 2.3 · self-hosted · runs on the shop LAN
+          TravelBean MNL · Powered by VenueVue · Local-network POS
         </p>
       </div>
     </main>

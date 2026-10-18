@@ -123,7 +123,7 @@ BEGIN
     --     them instead of guessing a conversion (mL and ml are not necessarily
     --     interchangeable with kg / l / pcs at all).
     SELECT COUNT(*) INTO n FROM `ingredients`
-     WHERE `unit` IN ('ml', 'kg', 'l', 'pcs');
+     WHERE BINARY `unit` IN ('ml', 'kg', 'l', 'pcs');
     IF n > 0 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT =
             'ABORTED (1b): ingredients rows still use pre-2.3 unit labels (ml/kg/l/pcs). Map them to g, mL or units, then re-run.';
@@ -131,7 +131,12 @@ BEGIN
 
     -- 1c. The CHECK constraints added in sections 4 and 5 must be satisfiable
     --     by the data that is already there, or the ALTER would fail mid-run.
-    SELECT COUNT(*) INTO n FROM `ingredients` WHERE `current_quantity` < 0;
+    IF EXISTS (SELECT 1 FROM information_schema.COLUMNS
+               WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='ingredients' AND COLUMN_NAME='current_quantity') THEN
+        SELECT COUNT(*) INTO n FROM `ingredients` WHERE `current_quantity` < 0;
+    ELSE
+        SELECT COUNT(*) INTO n FROM `ingredients` WHERE `current_stock` < 0;
+    END IF;
     IF n > 0 THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT =
             'ABORTED (1c): ingredients.current_quantity contains negative stock, which chk_ingredient_stock_nonneg will reject.';
