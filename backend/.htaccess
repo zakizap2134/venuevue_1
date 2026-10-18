@@ -65,7 +65,7 @@
 # all over HTTP.
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteRule ^tools/ - [F,L]
+    RewriteRule ^(tools|lib)/ - [F,L]
 </IfModule>
 
 # -----------------------------------------------------------------------------

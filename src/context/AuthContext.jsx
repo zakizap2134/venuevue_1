@@ -19,13 +19,13 @@ import {
   useContext,
   useMemo,
   useState,
-} from 'react';
+} from "react";
 
-import { getTabletId, withTabletId } from '../lib/tablet';
+import { getTabletId, withTabletId } from "../lib/tablet";
 
 /** localStorage keys - namespaced so they never collide with other apps on the tablet. */
-const TOKEN_STORAGE_KEY = 'venuevue.auth.token';
-const USER_STORAGE_KEY = 'venuevue.auth.user';
+const TOKEN_STORAGE_KEY = "venuevue.auth.token";
+const USER_STORAGE_KEY = "venuevue.auth.user";
 
 /** Bearer tokens are 64 lowercase hex characters (bin2hex(random_bytes(32))). */
 const TOKEN_PATTERN = /^[0-9a-f]{64}$/;
@@ -36,12 +36,12 @@ const TOKEN_PATTERN = /^[0-9a-f]{64}$/;
  * correct default. Set VITE_API_BASE_URL in .env only when the Vite dev server
  * runs on a different port than Apache.
  */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 /** Role -> landing route, mirrored by the login screen. */
 export const ROLE_ROUTES = {
-  BARISTA: '/pos',
-  OWNER: '/admin',
+  BARISTA: "/pos",
+  OWNER: "/admin",
 };
 
 const AuthContext = createContext(null);
@@ -55,7 +55,7 @@ function readStoredToken() {
     const token = localStorage.getItem(TOKEN_STORAGE_KEY);
     // Guard against corrupted / tampered storage: a token of the wrong shape
     // is treated as "not signed in".
-    return TOKEN_PATTERN.test(token ?? '') ? token : null;
+    return TOKEN_PATTERN.test(token ?? "") ? token : null;
   } catch {
     return null;
   }
@@ -66,7 +66,7 @@ function readStoredUser() {
     const raw = localStorage.getItem(USER_STORAGE_KEY);
     const user = raw ? JSON.parse(raw) : null;
 
-    if (user && typeof user === 'object' && ROLE_ROUTES[user.role]) {
+    if (user && typeof user === "object" && ROLE_ROUTES[user.role]) {
       return user;
     }
 
@@ -102,7 +102,9 @@ export function AuthProvider({ children }) {
 
   // A session counts as authenticated only when *both* halves are present and
   // well-formed - never trust the token alone.
-  const isAuthenticated = Boolean(token && user?.role && TOKEN_PATTERN.test(token));
+  const isAuthenticated = Boolean(
+    token && user?.role && TOKEN_PATTERN.test(token),
+  );
 
   /**
    * Persist both halves of the session, or clear them when called with nulls.
@@ -142,8 +144,8 @@ export function AuthProvider({ children }) {
 
       try {
         const response = await fetch(`${API_BASE_URL}/backend/auth.php`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             username: username.trim(),
             password,
@@ -155,22 +157,26 @@ export function AuthProvider({ children }) {
         const payload = await response.json().catch(() => null);
 
         if (!response.ok || !payload?.success) {
-          throw new Error(payload?.error ?? `Sign-in failed (HTTP ${response.status}).`);
+          throw new Error(
+            payload?.error ?? `Sign-in failed (HTTP ${response.status}).`,
+          );
         }
 
         if (!TOKEN_PATTERN.test(payload.token)) {
           // Never store something the API did not actually issue.
-          throw new Error('Malformed session token received from the server.');
+          throw new Error("Malformed session token received from the server.");
         }
 
         const nextUser = {
           user_id: Number(payload.user?.user_id),
-          username: String(payload.user?.username ?? ''),
+          username: String(payload.user?.username ?? ""),
           role: payload.user?.role,
         };
 
         if (!ROLE_ROUTES[nextUser.role]) {
-          throw new Error(`Unsupported role received: ${String(payload.user?.role)}.`);
+          throw new Error(
+            `Unsupported role received: ${String(payload.user?.role)}.`,
+          );
         }
 
         setToken(payload.token);
@@ -187,7 +193,7 @@ export function AuthProvider({ children }) {
         const message =
           loginError instanceof Error && loginError.message
             ? loginError.message
-            : 'Unable to reach the server. Check the network and try again.';
+            : "Unable to reach the server. Check the network and try again.";
 
         setError(message);
         throw loginError;
@@ -199,16 +205,25 @@ export function AuthProvider({ children }) {
   );
 
   /**
-   * Clear the local session. The token stays valid server-side until it lapses
-   * (24h) - pair with a /backend/logout.php endpoint if you need immediate
-   * server-side revocation.
+   * Clear the local session and request server-side revocation. If the host is
+   * unavailable, the token expires naturally; locally persisted orders remain.
    */
   const logout = useCallback(() => {
+    if (token)
+      fetch(`${API_BASE_URL}/backend/api.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ action: "logout" }),
+        keepalive: true,
+      }).catch(() => {});
     setToken(null);
     setUser(null);
     setError(null);
     clearStoredSession();
-  }, []);
+  }, [token]);
 
   /**
    * fetch() wrapper that attaches the Bearer token and handles session expiry.
@@ -220,15 +235,15 @@ export function AuthProvider({ children }) {
   const fetchWithAuth = useCallback(
     async (url, options = {}) => {
       if (!token) {
-        throw new Error('Not signed in.');
+        throw new Error("Not signed in.");
       }
 
       const { json, ...rest } = options;
       const headers = new Headers(rest.headers ?? {});
-      headers.set('Authorization', `Bearer ${token}`);
+      headers.set("Authorization", `Bearer ${token}`);
 
-      if (json !== undefined && !headers.has('Content-Type')) {
-        headers.set('Content-Type', 'application/json');
+      if (json !== undefined && !headers.has("Content-Type")) {
+        headers.set("Content-Type", "application/json");
       }
 
       const response = await fetch(`${API_BASE_URL}${url}`, {
@@ -238,7 +253,8 @@ export function AuthProvider({ children }) {
         // automatic rather than a rule each caller has to remember: sync.php
         // requires tablet_id and rejects a payload without one. An explicit
         // tablet_id inside `json` still wins (see lib/tablet.js).
-        body: json !== undefined ? JSON.stringify(withTabletId(json)) : rest.body,
+        body:
+          json !== undefined ? JSON.stringify(withTabletId(json)) : rest.body,
       });
 
       // A 401 from any endpoint means the session is gone: drop it locally so
@@ -246,7 +262,7 @@ export function AuthProvider({ children }) {
       if (response.status === 401) {
         setToken(null);
         setUser(null);
-        setError('Your session has expired. Please sign in again.');
+        setError("Your session has expired. Please sign in again.");
         clearStoredSession();
       }
 
@@ -267,7 +283,16 @@ export function AuthProvider({ children }) {
       fetchWithAuth,
       clearError: () => setError(null),
     }),
-    [user, token, isAuthenticated, isLoading, error, login, logout, fetchWithAuth],
+    [
+      user,
+      token,
+      isAuthenticated,
+      isLoading,
+      error,
+      login,
+      logout,
+      fetchWithAuth,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -280,7 +305,7 @@ export function useAuth() {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error('useAuth() must be used inside an <AuthProvider>.');
+    throw new Error("useAuth() must be used inside an <AuthProvider>.");
   }
 
   return context;

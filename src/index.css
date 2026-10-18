@@ -30,30 +30,30 @@
 /* -------------------------------------------------------------------------- */
 @theme {
   /* Primary: navbar + buttons                                             */
-  --color-brand: #4A3325;
+  --color-brand: #4a3325;
   /* Secondary: cards + highlights                                         */
-  --color-latte: #D8C5AC;
+  --color-latte: #d8c5ac;
   /* Text + icons                                                          */
   --color-ink: #242424;
   /* Page background                                                       */
-  --color-surface: #FAF7F2;
+  --color-surface: #faf7f2;
   /* Cards + panels                                                        */
-  --color-panel: #FFFFFF;
+  --color-panel: #ffffff;
   /* Borders + dividers                                                    */
-  --color-line: #E8E6E1;
+  --color-line: #e8e6e1;
   /* Disabled text                                                         */
-  --color-disabled: #A7A7A7;
+  --color-disabled: #a7a7a7;
   /* Secondary text                                                        */
-  --color-muted: #4B4B4B;
+  --color-muted: #4b4b4b;
 
   /* Inventory status                                                      */
-  --color-stock-in: #6B8F71;
-  --color-stock-low: #E9A23B;
-  --color-stock-out: #D96868;
+  --color-stock-in: #6b8f71;
+  --color-stock-low: #e9a23b;
+  --color-stock-out: #d96868;
 
   /* Accents                                                               */
-  --color-accent: #8E7CC3; /* selected / highlight - violet */
-  --color-info: #6FA8DC; /* links / info - sky blue       */
+  --color-accent: #8e7cc3; /* selected / highlight - violet */
+  --color-info: #6fa8dc; /* links / info - sky blue       */
 
   /* --- Code + query blocks ----------------------------------------------
    * Pinned by the spec in both themes: charcoal #1F1F1F behind crisp cream
@@ -64,13 +64,13 @@
    * The syntax hues are the palette accents lifted until they clear 4.5:1 on
    * #1F1F1F (each lands between 6:1 and 10:1): violet from --color-accent, sky
    * from --color-info, sage from --color-stock-in, amber from --color-stock-low. */
-  --color-code: #1F1F1F;
-  --color-on-code: #FAF7F2;
-  --color-code-keyword: #C9B6F2;
-  --color-code-fn: #A9CDF0;
-  --color-code-string: #A9C9AE;
-  --color-code-number: #F0C58A;
-  --color-code-comment: #9E9E9E;
+  --color-code: #1f1f1f;
+  --color-on-code: #faf7f2;
+  --color-code-keyword: #c9b6f2;
+  --color-code-fn: #a9cdf0;
+  --color-code-string: #a9c9ae;
+  --color-code-number: #f0c58a;
+  --color-code-comment: #9e9e9e;
 
   /* --- Accent text partners ---------------------------------------------
    * #8E7CC3 and #6FA8DC are fills, not text colours: as text they are 3.6:1 and
@@ -83,10 +83,10 @@
    * Both pairs are theme-independent for the same reason as the code tokens: the
    * surfaces they pair with (panel, code, brand bar) keep their luminance across
    * the two themes. */
-  --color-accent-strong: #5B47A0; /* 7.3:1 on white, 5.9:1 on #E8E8E8 */
-  --color-info-strong: #1A6096; /* 6.7:1 on white, 5.4:1 on #E8E8E8 */
-  --color-accent-soft: #C3B4E6; /* 9.3:1 on #1F1F1F                 */
-  --color-info-soft: #A9CDF0; /* 9.8:1 on #1F1F1F                 */
+  --color-accent-strong: #5b47a0; /* 7.3:1 on white, 5.9:1 on #E8E8E8 */
+  --color-info-strong: #1a6096; /* 6.7:1 on white, 5.4:1 on #E8E8E8 */
+  --color-accent-soft: #c3b4e6; /* 9.3:1 on #1F1F1F                 */
+  --color-info-soft: #a9cdf0; /* 9.8:1 on #1F1F1F                 */
 
   /* --- Links on the page background -------------------------------------
    * A link that lives directly on the page needs the opposite treatment to one
@@ -94,7 +94,7 @@
    * to flip with it. This is the one text token that does declare a dark
    * override below - deep sky on cream (6.2:1), pale sky on dark brown (8.6:1).
    * --color-info-strong is not used here: on the dark page it is 2.1:1. */
-  --color-link: #1A6096; /* hover / active link on the page */
+  --color-link: #1a6096; /* hover / active link on the page */
 
   /* --- Text-on-a-fill partners ------------------------------------------
    * --color-ink is only legible against a light fill, so every fill gets an
@@ -102,10 +102,10 @@
    * charcoal and dark gray doing their normal job; the dark overrides are where
    * the specification needed correcting (see the note above :root.dark). */
   --color-on-surface: #242424; /* text on the page background      */
-  --color-on-surface-muted: #4B4B4B; /* secondary text on the background */
+  --color-on-surface-muted: #4b4b4b; /* secondary text on the background */
   --color-on-panel: #242424; /* text on cards + panels           */
-  --color-on-panel-muted: #4B4B4B; /* secondary text on cards          */
-  --color-on-brand: #FAF7F2; /* text on coffee brown             */
+  --color-on-panel-muted: #4b4b4b; /* secondary text on cards          */
+  --color-on-brand: #faf7f2; /* text on coffee brown             */
   --color-on-latte: #242424; /* text on latte beige              */
 }
 
@@ -137,31 +137,31 @@
  * sits in an on-* partner token, so nothing is ever dark text on a dark chip.
  */
 :root.dark {
-  --color-brand: #2B1F14;
-  --color-latte: #7A5E45;
+  --color-brand: #2b1f14;
+  --color-latte: #7a5e45;
   --color-ink: #121212;
-  --color-surface: #2E2A24;
-  --color-panel: #E8E8E8;
-  --color-line: #A0A0A0;
-  --color-disabled: #4B4B4B;
-  --color-muted: #1F1F1F;
+  --color-surface: #2e2a24;
+  --color-panel: #e8e8e8;
+  --color-line: #a0a0a0;
+  --color-disabled: #4b4b4b;
+  --color-muted: #1f1f1f;
 
-  --color-stock-in: #3F6B56;
-  --color-stock-low: #C27A24;
-  --color-stock-out: #B55252;
+  --color-stock-in: #3f6b56;
+  --color-stock-low: #c27a24;
+  --color-stock-out: #b55252;
 
-  --color-accent: #6B52B8;
-  --color-info: #4A8FD6;
+  --color-accent: #6b52b8;
+  --color-info: #4a8fd6;
 
-  --color-on-surface: #E8E8E8;
-  --color-on-surface-muted: #A0A0A0;
+  --color-on-surface: #e8e8e8;
+  --color-on-surface-muted: #a0a0a0;
   --color-on-panel: #121212;
-  --color-on-panel-muted: #1F1F1F;
-  --color-on-brand: #E8E8E8;
-  --color-on-latte: #E8E8E8;
+  --color-on-panel-muted: #1f1f1f;
+  --color-on-brand: #e8e8e8;
+  --color-on-latte: #e8e8e8;
 
   /* The page background flips, so the page-level link colour flips with it. */
-  --color-link: #A9CDF0;
+  --color-link: #a9cdf0;
 }
 
 /* Let the browser theme native chrome - scrollbars, caret, date pickers and the
@@ -184,4 +184,239 @@
   body {
     @apply bg-surface text-on-surface antialiased;
   }
+}
+
+/* Phase 1 workflow controls reuse the existing warm palette. */
+.vv-workspace {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  color: var(--color-on-surface, #30231d);
+}
+.vv-workspace h1 {
+  font-size: 1.8rem;
+  font-weight: 750;
+}
+.vv-workspace h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.vv-workspace p {
+  margin: 0.5rem 0;
+}
+.vv-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.vv-card {
+  color: var(--color-on-panel);
+  color-scheme: light;
+  background: var(--color-panel, #fffaf5);
+  border: 1px solid #b69b7d65;
+  border-radius: 16px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+}
+.vv-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+  font-weight: 600;
+}
+.vv-field input,
+.vv-field select {
+  min-height: 48px;
+  border: 1px solid #9a836e;
+  border-radius: 8px;
+  padding: 0.6rem;
+  background: var(--color-panel, #fff);
+  color: inherit;
+  min-width: 0;
+  max-width: 100%;
+  font-weight: 400;
+}
+.vv-workspace button {
+  min-height: 46px;
+  border: 1px solid #9a836e;
+  border-radius: 9px;
+  padding: 0.55rem 0.9rem;
+  background: var(--color-panel, #f5eee6);
+  color: var(--color-on-panel);
+  cursor: pointer;
+}
+.vv-workspace button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.vv-workspace button:focus-visible,
+.vv-field input:focus-visible,
+.vv-field select:focus-visible {
+  outline: 3px solid #8582cd;
+  outline-offset: 2px;
+}
+.vv-workspace button.vv-primary,
+.vv-tabs button[aria-current="page"] {
+  background: #593e2e;
+  color: #fffaf5;
+}
+.vv-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.vv-pos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(310px, 390px);
+  gap: 1.25rem;
+  align-items: start;
+}
+.vv-cart {
+  position: sticky;
+  top: 110px;
+  max-height: calc(100vh - 125px);
+  overflow: auto;
+}
+.vv-menu,
+.vv-forms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.vv-menu .vv-card {
+  margin: 0;
+}
+.vv-forms {
+  margin: 1rem 0;
+}
+.vv-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+.vv-choices button span,
+.vv-choices button small {
+  display: block;
+}
+.vv-cart-line,
+.vv-order {
+  border-bottom: 1px solid #b69b7d65;
+  padding: 0.8rem 0;
+}
+.vv-notice {
+  padding: 0.8rem 1rem;
+  background: #dce9da;
+  color: #234027;
+  border-radius: 9px;
+}
+.vv-warning {
+  padding: 1rem;
+  background: #fff0cf;
+  color: #634111;
+  border: 1px solid #ceaa64;
+  border-radius: 10px;
+  margin: 1rem 0;
+  overflow-wrap: anywhere;
+}
+.vv-warning button {
+  margin: 0.4rem;
+}
+.vv-muted {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  opacity: 0.8;
+}
+.vv-scroll {
+  overflow-x: auto;
+}
+.vv-workspace table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+.vv-workspace th,
+.vv-workspace td {
+  padding: 0.65rem;
+  border-bottom: 1px solid #b69b7d65;
+  vertical-align: top;
+}
+.vv-workspace th {
+  font-size: 0.8rem;
+}
+.vv-low {
+  font-weight: 800;
+  color: #b35425;
+}
+.vv-totals {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  max-width: 500px;
+  margin: 1rem 0;
+}
+.vv-totals dd {
+  font-weight: 700;
+}
+.vv-recipe {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+  margin-bottom: 0.75rem;
+}
+.vv-recipe .vv-field {
+  flex: 1;
+  min-width: 160px;
+  margin: 0;
+}
+.vv-workspace summary {
+  cursor: pointer;
+  padding: 0.8rem;
+  font-weight: 600;
+}
+@media (max-width: 850px) {
+  .vv-pos {
+    grid-template-columns: 1fr;
+  }
+  .vv-cart {
+    position: static;
+    max-height: none;
+  }
+  .vv-heading {
+    align-items: flex-start;
+  }
+}
+.vv-warning button {
+  background: #fffaf5;
+}
+:root.dark .vv-low {
+  color: #8b3c13;
+}
+.vv-receipt-brand {font-size:1.25rem;font-weight:750;letter-spacing:-.02em;}
+.vv-tabs {gap:.6rem;margin:1.25rem 0;}
+.vv-card {box-shadow:0 2px 10px #4a332508;}
+.vv-workspace button:not(:disabled):hover {border-color:#593e2e;box-shadow:0 0 0 1px #9a836e;}
+.vv-workspace button:focus-visible,.vv-field input:focus-visible,.vv-field select:focus-visible {outline-color:#9a683d;}
+.vv-totals > div {display:contents;}
+@media (max-width: 420px) {
+  .vv-menu,.vv-forms {grid-template-columns:minmax(0,1fr);}
+  .vv-card {padding:1rem;}
+}
+.vv-metric {display:block;font-size:1.8rem;margin-top:.5rem;}
+.vv-sale-link {margin:.4rem;}
+.vv-audit-details {white-space:pre-wrap;overflow-wrap:anywhere;max-width:500px;font-size:.85rem;}
+.vv-workspace fieldset {min-width:0;}
+.vv-workspace hr {margin:1.5rem 0;border-color:var(--color-line);}
+.vv-workspace h3 {font-weight:700;margin:.5rem 0;}
+@media print {
+  header,.vv-tabs,button,.vv-recipe,.vv-notice {display:none!important;}
+  .vv-card {break-inside:avoid;border:0;}
+  .vv-scroll {overflow:visible;}
+  .vv-workspace {color:#000;background:#fff;}
 }

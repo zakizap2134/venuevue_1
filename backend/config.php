@@ -114,6 +114,8 @@ function get_pdo(): PDO
         PDO::ATTR_STRINGIFY_FETCHES => false,
     ]);
 
+    $pdo->exec("SET time_zone = '+08:00'");
+    date_default_timezone_set('Asia/Manila');
     return $pdo;
 }
 

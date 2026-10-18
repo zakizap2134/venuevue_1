@@ -14,12 +14,12 @@
  * clears 3:1 as an indicator, and on a white panel the same hex would not.
  */
 
-import { NavLink } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 
-import { useAuth } from '../context/AuthContext';
-import LogoPlaceholder from './LogoPlaceholder';
-import StatusPill from './StatusPill';
-import ThemeToggle from './ThemeToggle';
+import { useAuth } from "../context/AuthContext";
+import LogoPlaceholder from "./LogoPlaceholder";
+import StatusPill from "./StatusPill";
+import ThemeToggle from "./ThemeToggle";
 
 /** One 20px glyph per destination, drawn in currentColor. */
 const NAV_ICONS = {
@@ -40,9 +40,13 @@ const NAV_ICONS = {
 
 /** Every destination the signed-in shell exposes, in nav order. */
 const NAV_ITEMS = [
-  { to: '/dashboard', label: 'Dashboard', icon: NAV_ICONS.grid },
-  { to: '/pos', label: 'Register', icon: NAV_ICONS.receipt },
-  { to: '/admin', label: 'Back Office', icon: NAV_ICONS.shield, ownerOnly: true },
+  { to: "/pos", label: "Register", icon: NAV_ICONS.receipt },
+  {
+    to: "/admin",
+    label: "Management",
+    icon: NAV_ICONS.shield,
+    ownerOnly: true,
+  },
 ];
 
 export default function SessionBar() {
@@ -50,9 +54,12 @@ export default function SessionBar() {
 
   // The back office is OWNER-only, so hide its tab from baristas instead of
   // offering a link that would bounce them straight back.
-  const items = NAV_ITEMS.filter((item) => !item.ownerOnly || user?.role === 'OWNER');
+  const items = NAV_ITEMS.filter(
+    (item) => !item.ownerOnly || user?.role === "OWNER",
+  );
 
-  const controlRing = 'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-info';
+  const controlRing =
+    "focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-info";
 
   return (
     <header className="sticky top-0 z-30 border-b border-on-brand/15 bg-brand px-4 py-3 shadow-lg sm:px-6">
@@ -62,14 +69,14 @@ export default function SessionBar() {
             right at every width; the role pill is the status read-out that used
             to be buried in the subtitle. */}
         <div className="mr-auto flex min-w-0 flex-wrap items-center gap-3">
-          <LogoPlaceholder tone="brand" size="md" subtitle={user?.username} />
+          <LogoPlaceholder tone="brand" size="md" subtitle={`VenueVue · ${user?.username ?? ''}`} />
 
           <StatusPill
             tone="latte"
             dot={false}
             className="uppercase tracking-wide"
           >
-            {user?.role ?? 'guest'}
+            {user?.role === "OWNER" ? "Owner / Admin" : user?.role === "BARISTA" ? "Barista" : "Guest"}
           </StatusPill>
         </div>
 
@@ -86,13 +93,13 @@ export default function SessionBar() {
               to={item.to}
               className={({ isActive }) =>
                 [
-                  'flex h-14 min-h-12 items-center gap-2.5 rounded-xl border-2 px-5 text-base font-semibold',
-                  'transition-colors',
+                  "flex h-14 min-h-12 items-center gap-2.5 rounded-xl border-2 px-5 text-base font-semibold",
+                  "transition-colors",
                   controlRing,
                   isActive
-                    ? 'border-accent bg-accent/30 text-on-brand'
-                    : 'border-transparent text-on-brand/80 hover:border-info/60 hover:bg-info/40 hover:text-on-brand',
-                ].join(' ')
+                    ? "border-on-brand/70 bg-on-brand/15 text-on-brand"
+                    : "border-transparent text-on-brand/80 hover:border-on-brand/40 hover:bg-on-brand/10 hover:text-on-brand",
+                ].join(" ")
               }
             >
               <svg

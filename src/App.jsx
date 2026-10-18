@@ -1,24 +1,12 @@
-/**
- * VenueVue 2.3 - route table.
- *
- *   /login      -> LoginForm             (public)
- *   /dashboard  -> shared dashboard      (BARISTA + OWNER)
- *   /pos        -> register screen       (BARISTA + OWNER)
- *   /admin      -> back-office screen    (OWNER only)
- *   *           -> role-aware redirect
- *
- * LoginForm already redirects to ROLE_ROUTES[role] once the context reports an
- * authenticated session, so these guards are the second line of defence: they
- * stop anyone from reaching a screen by typing its URL.
- */
+/** Two-role navigation: Register for both roles; Management for Owner/Admin. */
 
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from "react-router-dom";
 
-import LoginForm from './components/LoginForm';
-import { ROLE_ROUTES, useAuth } from './context/AuthContext';
-import AdminScreen from './routes/AdminScreen';
-import DashboardScreen from './routes/DashboardScreen';
-import PosScreen from './routes/PosScreen';
+import LoginForm from "./components/LoginForm";
+import { ROLE_ROUTES, useAuth } from "./context/AuthContext";
+import AdminScreen from "./routes/AdminScreen";
+
+import PosScreen from "./routes/PosScreen";
 
 /**
  * Allow a route only when the signed-in user holds one of the required roles.
@@ -36,7 +24,7 @@ function RequireRole({ role, children }) {
   const allowed = Array.isArray(role) ? role : [role];
 
   if (!allowed.includes(user.role)) {
-    return <Navigate to={ROLE_ROUTES[user.role] ?? '/login'} replace />;
+    return <Navigate to={ROLE_ROUTES[user.role] ?? "/login"} replace />;
   }
 
   return children;
@@ -50,7 +38,7 @@ export function LandingRedirect() {
     return <Navigate to="/login" replace />;
   }
 
-  return <Navigate to={ROLE_ROUTES[user.role] ?? '/login'} replace />;
+  return <Navigate to={ROLE_ROUTES[user.role] ?? "/login"} replace />;
 }
 
 export default function App() {
@@ -58,22 +46,15 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<LoginForm />} />
 
-      {/* Shared landing page - both roles see the same operational overview. */}
-      <Route
-        path="/dashboard"
-        element={
-          <RequireRole role={['BARISTA', 'OWNER']}>
-            <DashboardScreen />
-          </RequireRole>
-        }
-      />
+      {/* Legacy dashboard links resolve through the owner-guarded management route. */}
+      <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
 
       {/* The register is a shared workstation: an owner covering a shift needs
           it too, so this is no longer barista-only. /admin stays OWNER-only. */}
       <Route
         path="/pos"
         element={
-          <RequireRole role={['BARISTA', 'OWNER']}>
+          <RequireRole role={["BARISTA", "OWNER"]}>
             <PosScreen />
           </RequireRole>
         }
